@@ -22,4 +22,4 @@ RUN poetry install --no-root
 
 COPY ./imei /app/imei
 
-CMD [ ]
+CMD [ "python", "-m", "app.main" ]
