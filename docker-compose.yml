@@ -7,12 +7,19 @@ services:
       dockerfile: ./imei/Dockerfile
     volumes:
       - ./imei:/app/imei
-      - ./white_list.csv:/app/white_list.csv
     env_file:
       - .env
     networks:
       - imei_nt 
 
+  database:
+    image: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - imei_nt
 
 networks:
   imei_nt:

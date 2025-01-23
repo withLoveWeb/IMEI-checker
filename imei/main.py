@@ -8,9 +8,12 @@ from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
 from loguru import logger
 
 from imei.core.config import config 
+from imei.core.logger import setup_logger
+from imei.core.database import DatabaseMiddleware
 from imei.handlers.check_imei import imei_router 
 from imei.handlers.helpers import helper_router 
-from imei.core.logger import setup_logger
+
+
 
 setup_logger()
 
@@ -24,11 +27,12 @@ dp = Dispatcher(
     events_isolation=SimpleEventIsolation(),
 )
 
+dp.update.middleware(DatabaseMiddleware())
 dp.include_routers(imei_router, helper_router)
+
 
 async def main():
     try:
-        logger.info("Init bot")
         await bot.delete_webhook(drop_pending_updates=True) 
         await dp.start_polling(
             bot, allowed_updates=dp.resolve_used_update_types())
@@ -38,6 +42,7 @@ async def main():
 
 if __name__ == "__main__":
     try:
+        logger.info("Init bot")
         asyncio.run(main())
     except Exception as e:
         logging.warning(e)

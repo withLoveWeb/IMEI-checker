@@ -1,6 +1,8 @@
 from typing import Any, AsyncIterator
 from contextlib import asynccontextmanager
 
+from aiogram import BaseMiddleware
+from aiogram.types import TelegramObject
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -16,7 +18,7 @@ class Base(DeclarativeBase):
     __mapper_args__ = {"eager_defaults": True}
 
 
-class SQLAlchemySessionManager(Base):
+class DBSessionManager():
 
     def __init__(self, host: str, engine_kwargs: dict[str, Any] = {}):
         self._engine = create_async_engine(host, **engine_kwargs)
@@ -45,11 +47,13 @@ class SQLAlchemySessionManager(Base):
             await session.close()
 
 
-sessionmanager = SQLAlchemySessionManager(
+sessionmanager = DBSessionManager(
     config.DATABASE_URL, {"echo": config.DEBUG}
 )
 
 
-async def get_db_session():
-    async with sessionmanager.session() as session:
-        yield session
+class DatabaseMiddleware(BaseMiddleware):
+    async def __call__(self, handler, event: TelegramObject, data: dict):
+        async with sessionmanager.session() as session:
+            data["db_session"] = session
+            return await handler(event, data)
