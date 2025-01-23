@@ -3,28 +3,15 @@ version: '1.0'
 services:
   bot:
     build:
-      context: ./imei
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./imei/Dockerfile
     volumes:
-      ./imei:/app/imei
+      - ./imei:/app/imei
+      - ./white_list.csv:/app/white_list.csv
     env_file:
       - .env
     networks:
       - imei_nt 
-    depends_on:
-      database:
-        condition: service_started
-
-  database:
-    image: postgres
-    environment:
-      POSTGRES_DB: ${NAME_DB}
-      POSTGRES_USER: ${USERNAME_DB}
-      POSTGRES_PASSWORD: ${PASSWORD_DB}
-    ports:
-      - ${EXTERNAL_PORT_DB}:${INTERNAL_PORT_DB}
-    networks:
-      - imei_nt
 
 
 networks:

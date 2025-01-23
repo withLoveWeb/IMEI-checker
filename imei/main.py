@@ -1,19 +1,43 @@
 import asyncio
-from aiogram import Bot
+import logging
 
+from aiogram import Bot, Dispatcher
+from aiogram.enums.parse_mode import ParseMode
+from aiogram.client.default import DefaultBotProperties
+from aiogram.fsm.storage.memory import MemoryStorage, SimpleEventIsolation
+from loguru import logger
 
-loop = asyncio.get_event_loop()
-bot = Bot('TOKEN', loop)
+from imei.core.config import config 
+from imei.handlers.check_imei import imei_router 
+from imei.handlers.helpers import helper_router 
+from imei.core.logger import setup_logger
 
+setup_logger()
+
+bot = Bot(
+    token=config.API_KEY_TG, 
+    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+)
+
+dp = Dispatcher(
+    storage=MemoryStorage(), 
+    events_isolation=SimpleEventIsolation(),
+)
+
+dp.include_routers(imei_router, helper_router)
 
 async def main():
-    bot_info = await bot.get_me()
-
-    print(bot_info.username)
-
-
-if __name__ == '__main__':
     try:
-        loop.run_until_complete(main())
-    except KeyboardInterrupt:
-        loop.stop()
+        logger.info("Init bot")
+        await bot.delete_webhook(drop_pending_updates=True) 
+        await dp.start_polling(
+            bot, allowed_updates=dp.resolve_used_update_types())
+    except Exception as e:
+        logging.info(e)
+
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        logging.warning(e)
