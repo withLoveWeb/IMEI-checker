@@ -12,5 +12,5 @@ insert into white_list (user_id)
 values (7131650742);
 
 
-insert into user (user_id)
-values (7131650742);
+insert into "user" (user_id, encrypted_token, is_admin)
+values (7131650742, 'flkasj', True);

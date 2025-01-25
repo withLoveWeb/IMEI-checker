@@ -12,6 +12,7 @@ from imei.core.database import DatabaseMiddleware
 from imei.core.logger import setup_logger
 from imei.handlers.check_imei import imei_router
 from imei.handlers.helpers import helper_router
+from imei.handlers.white_list_edit import white_list_router
 
 setup_logger()
 
@@ -23,7 +24,11 @@ dp = Dispatcher(
 )
 
 dp.update.middleware(DatabaseMiddleware())
-dp.include_routers(imei_router, helper_router)
+dp.include_routers(
+    imei_router,
+    helper_router,
+    white_list_router,
+)
 
 
 async def main():
