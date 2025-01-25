@@ -5,10 +5,10 @@ from loguru import logger
 
 from imei.filters.white_list_filter import IsUserInWhiteList
 
-
 imei_router = Router()
 
-@imei_router.message(IsUserInWhiteList(),Command("imei"))
+
+@imei_router.message(IsUserInWhiteList(), Command("imei"))
 async def referral_start(msg: Message):
     try:
         _, *imei_code = msg.text.split(maxsplit=1)

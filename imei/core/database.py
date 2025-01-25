@@ -1,25 +1,19 @@
-from typing import Any, AsyncIterator
 from contextlib import asynccontextmanager
+from typing import Any, AsyncIterator
 
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    async_sessionmaker,
-    create_async_engine,
-)
 
-from .config import config 
-
+from .config import config
 
 
 class Base(DeclarativeBase):
     __mapper_args__ = {"eager_defaults": True}
 
 
-class DBSessionManager():
-
+class DBSessionManager:
     def __init__(self, host: str, engine_kwargs: dict[str, Any] = {}):
         self._engine = create_async_engine(host, **engine_kwargs)
         self._sessionmaker = async_sessionmaker(autocommit=False, bind=self._engine)
@@ -47,9 +41,7 @@ class DBSessionManager():
             await session.close()
 
 
-sessionmanager = DBSessionManager(
-    config.DATABASE_URL, {"echo": config.DEBUG}
-)
+sessionmanager = DBSessionManager(config.DATABASE_URL, {"echo": config.DEBUG})
 
 
 class DatabaseMiddleware(BaseMiddleware):

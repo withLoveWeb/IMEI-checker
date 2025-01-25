@@ -1,10 +1,10 @@
 import os
-
 from dataclasses import dataclass
+
 
 @dataclass
 class Config:
-    API_KEY_TG: str = os.getenv('API_KEY_TG')
+    API_KEY_TG: str = os.getenv("API_KEY_TG")
     DATABASE_URL: str = (
         f"postgresql+asyncpg://"
         f"{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
@@ -16,8 +16,3 @@ class Config:
 
 
 config = Config()
-
- 
-    
-
-

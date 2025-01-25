@@ -1,5 +1,3 @@
-import asyncio
-
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
@@ -7,8 +5,8 @@ from loguru import logger
 
 from imei.texts.const_text import HELP_TEXT, START_TEXT
 
-
 helper_router = Router()
+
 
 @helper_router.message(Command("start"))
 async def start_command(msg: Message):

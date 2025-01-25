@@ -6,8 +6,6 @@ from loguru import logger
 
 from .config import config
 
-
-
 logger_name_list = [
     "aiogram",
 ]

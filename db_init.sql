@@ -1,4 +1,4 @@
-create table if not exists users (
+create table if not exists "user" (
     user_id bigserial primary key,
     encrypted_token varchar unique not null,
     is_admin boolean default false not null 

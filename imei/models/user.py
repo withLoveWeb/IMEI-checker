@@ -1,10 +1,11 @@
 from sqlalchemy import BigInteger, Boolean, CheckConstraint, String
 from sqlalchemy.orm import Mapped, mapped_column
+
 from imei.core.database import Base
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
     user_id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=False)
 
@@ -15,7 +16,7 @@ class User(Base):
 
 
 class WhiteList(Base):
-    __tablename__ = 'white_list'
+    __tablename__ = "white_list"
 
     tg_id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=False)
 
